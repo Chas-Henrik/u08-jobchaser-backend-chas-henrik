@@ -5,7 +5,7 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient();
 
 // CREATE
-export const createFavorite = async (req: Request, res: Response) => {
+export async function createFavorite(req: Request, res: Response) {
     const { userId, ...job }: { userId: number, job: Job } = req.body;
     // TODO: When we have authentication in place (JWT) we'll get userId from there
 
@@ -17,7 +17,7 @@ export const createFavorite = async (req: Request, res: Response) => {
 };
 
 // READ MANY
-export const getFavorites = async (req: Request, res: Response) => {
+export async function getFavorites(req: Request, res: Response) {
     const { userId } = req.body;    // TODO: replace with auth-hantering
 
     try {
@@ -28,7 +28,7 @@ export const getFavorites = async (req: Request, res: Response) => {
 };
 
 // READ ONE
-export const getFavorite = async (req: Request, res: Response) => {
+export async function getFavorite(req: Request, res: Response) {
     const { userId } = req.body;   // TODO: replace with auth-hantering
     const { id } = req.params;
 
@@ -40,7 +40,7 @@ export const getFavorite = async (req: Request, res: Response) => {
 };
 
 // UPDATE
-export const updateFavorite = async (req: Request, res: Response) => {
+export async function updateFavorite(req: Request, res: Response) {
     const { userId, ...job }: { userId: number, job: Job } = req.body;
     const { id } = req.params;   // TODO: replace with auth-hantering
 
@@ -52,7 +52,7 @@ export const updateFavorite = async (req: Request, res: Response) => {
 };
 
 // DELETE
-export const deleteFavorite = async (req: Request, res: Response) => {
+export async function deleteFavorite(req: Request, res: Response) {
     const { userId } = req.body;   // TODO: replace with auth-hantering
     const { id } = req.params;
 
