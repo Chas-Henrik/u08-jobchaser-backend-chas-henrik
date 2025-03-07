@@ -1,11 +1,12 @@
 # Job Chaser Backend
 
-The Job Chaser backend uses NodeJS, Express & Prisma and support the following routes & methods:
-*User routes:*
+The Job Chaser backend uses NodeJS, Express & Prisma and support the following routes & methods:  
+  
+**Users routes:**
 - /users (POST & GET method)
 - /users/:id (GET, PUT & DELETE method)
-
-*Favorite routes:*
+  
+**Favorites routes:**
 - /favorites (POST, GET & PUT method)
 - /favorites/:id (GET & DELETE method)
 
