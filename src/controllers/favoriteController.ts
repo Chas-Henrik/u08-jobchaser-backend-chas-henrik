@@ -14,7 +14,7 @@ export async function createFavorite(req: Request, res: Response) {
             data: favorite,
         })
 
-        res.status(201).json({ message: "Post created successfully", post: post});
+        res.status(201).json({message: "Post created successfully", post: post});
     } catch(error) {
         res.status(500).json({message: "Internal server error", error: error});
     }
