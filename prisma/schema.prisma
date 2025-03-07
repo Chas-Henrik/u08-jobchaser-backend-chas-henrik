@@ -35,9 +35,9 @@ model users {
   postalcode String?     @db.VarChar(6)
   city       String?     @db.VarChar(50)
   country    String?     @db.VarChar(50)
-  phone      String      @db.VarChar(15)
+  phone      String      @db.VarChar(15) @unique
   dob        DateTime?   @db.Date
-  email      String      @db.VarChar(100)
+  email      String      @db.VarChar(100) @unique
   password   String      @db.VarChar(128)
   favorites  favorites[]
 }
