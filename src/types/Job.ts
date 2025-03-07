@@ -1,4 +1,6 @@
 export type Job = {
+    id: string;
+    user_id: number;
     employer: string;
     logo_url?: string | null;
     headline?: string | null;

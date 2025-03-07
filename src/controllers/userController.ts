@@ -7,13 +7,25 @@ const prisma = new PrismaClient();
 // CREATE
 export async function createUser(req: Request, res: Response) {
     const user: User = req.body;
-    console.log(user);
+
     try {
         const result = await prisma.users.create({
             data: user,
         })
 
         res.status(201).json({message: "User created successfully", result: result});
+    } catch(error) {
+        res.status(500).json({message: "Internal server error", error: error});
+    }
+};
+
+// READ MANY
+export async function getUsers(req: Request, res: Response) {
+
+    try {
+        const users = await prisma.users.findMany();
+
+        res.status(200).json({message: "Users fetched successfully", users: users});
     } catch(error) {
         res.status(500).json({message: "Internal server error", error: error});
     }
@@ -41,24 +53,23 @@ export async function getUser(req: Request, res: Response) {
     }
 }
 
-// READ MANY
-export async function getUsers(req: Request, res: Response) {
-
-    try {
-        const users = await prisma.users.findMany();
-
-        res.status(200).json({message: "Users fetched successfully", users: users});
-    } catch(error) {
-        res.status(500).json({message: "Internal server error", error: error});
-    }
-};
-
 // UPDATE 
 export async function updateUser(req: Request, res: Response) {
     const { id } = req.params; 
     const user: User = req.body;
     
     try {
+        const foundUser = await prisma.users.findUnique({
+            where: {
+                id: parseInt(id),
+            },
+        });
+        
+        if(!foundUser) {
+            res.status(404).json({error: "User not found"});
+            return;
+        }
+
         const updatedUser = await prisma.users.update({
             where: {
                 id: parseInt(id),
@@ -77,6 +88,17 @@ export async function deleteUser(req: Request, res: Response) {
         const { id } = req.params;
 
         try {
+            const foundUser = await prisma.users.findUnique({
+                where: {
+                    id: parseInt(id),
+                },
+            });
+            
+            if(!foundUser) {
+                res.status(404).json({error: "User not found"});
+                return;
+            }
+
             const deletedUser = await prisma.users.delete({
                 where: {
                     id: parseInt(id),
