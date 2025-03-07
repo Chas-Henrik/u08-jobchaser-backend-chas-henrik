@@ -1,0 +1,43 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model favorites {
+  id       String    @id @db.VarChar(11)
+  user_id  Int
+  employer String    @db.VarChar(100)
+  logo_url String?   @db.VarChar(255)
+  headline String?   @db.VarChar(255)
+  position String?   @db.VarChar(255)
+  role     String?   @db.VarChar(255)
+  posted   DateTime? @db.DateTime(0)
+  expires  DateTime? @db.DateTime(0)
+  contract String    @db.VarChar(50)
+  city     String?   @db.VarChar(30)
+  region   String?   @db.VarChar(40)
+  country  String?   @db.VarChar(50)
+  url      String    @db.VarChar(255)
+  users    users     @relation(fields: [user_id], references: [id], onUpdate: Restrict, map: "user_id")
+
+  @@index([user_id], map: "user_id")
+}
+
+model users {
+  id         Int         @id @default(autoincrement())
+  firstname  String      @db.VarChar(30)
+  lastname   String      @db.VarChar(30)
+  address    String?     @db.VarChar(50)
+  postalcode String?     @db.VarChar(6)
+  city       String?     @db.VarChar(50)
+  country    String?     @db.VarChar(50)
+  phone      String      @db.VarChar(15)
+  dob        DateTime?   @db.Date
+  email      String      @db.VarChar(100)
+  password   String      @db.VarChar(128)
+  favorites  favorites[]
+}
