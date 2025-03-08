@@ -22,7 +22,7 @@ export async function createUser(req: Request, res: Response) {
         const date = (user.dateOfBirth)? new Date(user.dateOfBirth): null;
         const currentDate = new Date();
         if(date && date > currentDate) {
-            res.status(400).json({message: "Date of birth cannot be in the future"});
+            res.status(400).json({message: "Date of Birth cannot be in the future"});
             return;
         }
 
@@ -96,7 +96,7 @@ export async function updateUser(req: Request, res: Response) {
         const date = (user.dateOfBirth)? new Date(user.dateOfBirth): null;
         const currentDate = new Date();
         if(date && date > currentDate) {
-            res.status(400).json({message: "Date of birth cannot be in the future"});
+            res.status(400).json({message: "Date of Birth cannot be in the future"});
             return;
         }
 
