@@ -10,11 +10,22 @@ export async function createFavorite(req: Request, res: Response) {
     // TODO: When we have authentication in place (JWT) we'll get userId from there
 
     try {
-        const post = await prisma.favorites.create({
+        const favoriteFound = await prisma.favorites.findUnique({
+            where: {
+                id: favorite.id,
+            },
+        });
+
+        if(favoriteFound) {
+            res.status(409).json({message: "Favorite already exists"});
+            return;
+        }
+
+        const result = await prisma.favorites.create({
             data: favorite,
         })
 
-        res.status(201).json({message: "Post created successfully", post: post});
+        res.status(201).json({message: "Favorite created successfully", result: result});
     } catch(error) {
         console.error(error);
         res.status(500).json({message: `Internal server error\n${(error as Error).name}`, error: error});
@@ -29,7 +40,7 @@ export async function getFavorites(req: Request, res: Response) {
         const favorites = await prisma.favorites.findMany({
             where: {
                 user_id: {
-                    equals: parseInt(userId),
+                    equals: parseInt("1"),
                 },
             },
         })
@@ -83,6 +94,10 @@ export async function updateFavorite(req: Request, res: Response) {
         
         if(!foundFavorite) {
             res.status(404).json({error: "Favorite not found"});
+            return;
+        }
+        if(favorite.id !== foundFavorite.id) {
+            res.status(400).json({message: "Id cannot be updated"});
             return;
         }
 
