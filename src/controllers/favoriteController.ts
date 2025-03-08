@@ -16,7 +16,8 @@ export async function createFavorite(req: Request, res: Response) {
 
         res.status(201).json({message: "Post created successfully", post: post});
     } catch(error) {
-        res.status(500).json({message: "Internal server error", error: error});
+        console.error(error);
+        res.status(500).json({message: `Internal server error\n${(error as Error).name}`, error: error});
     }
 };
 
@@ -33,12 +34,13 @@ export async function getFavorites(req: Request, res: Response) {
             },
         })
         if (favorites.length === 0) {
-            res.status(404).json({error: "Favorites not found"});
+            res.status(404).json({message: "Favorites not found"});
             return;
         }
         res.status(200).json({message: "Favorites fetched successfully", favorites: favorites});
     } catch(error) {
-        res.status(500).json({message: "Internal server error", error: error});
+        console.error(error);
+        res.status(500).json({message: `Internal server error\n${(error as Error).name}`, error: error});
     }
 };
 
@@ -56,13 +58,14 @@ export async function getFavorite(req: Request, res: Response) {
         });
 
         if(!favorite) {
-            res.status(404).json({error: "Favorite not found"});
+            res.status(404).json({message: "Favorite not found"});
             return;
         }
 
         res.status(200).json({message: "Favorite fetched successfully", favorite: favorite})
     } catch(error) {
-        res.status(500).json({message: "Internal server error", error: error});
+        console.error(error);
+        res.status(500).json({message: `Internal server error\n${(error as Error).name}`, error: error});
     }
 };
 
@@ -93,7 +96,8 @@ export async function updateFavorite(req: Request, res: Response) {
 
         res.status(200).json({message: "Favorite updated successfully", updatedFavorite: updatedFavorite});
     } catch(error) {
-        res.status(500).json({message: "Internal server error", error: error});
+        console.error(error);
+        res.status(500).json({message: `Internal server error\n${(error as Error).name}`, error: error});
     }
 };
 
@@ -111,7 +115,7 @@ export async function deleteFavorite(req: Request, res: Response) {
         });
         
         if(!foundFavorite) {
-            res.status(404).json({error: "Favorite not found"});
+            res.status(404).json({message: "Favorite not found"});
             return;
         }
 
@@ -124,6 +128,7 @@ export async function deleteFavorite(req: Request, res: Response) {
 
         res.status(200).json({message: "Favorite deleted successfully", deletedFavorite: deletedFavorite});
     } catch(error) {
-        res.status(500).json({message: "Internal server error", error: error});
+        console.error(error);
+        res.status(500).json({message: `Internal server error\n${(error as Error).name}`, error: error});
     }
 };
