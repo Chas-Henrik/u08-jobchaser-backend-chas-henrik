@@ -33,6 +33,6 @@ The site has been published on Vercel:
 
 *Notes:*
   
-1. 
+1. As the favorite DB Table is shared among the users, all users will be affected if one user updates a favorite (with the PUT method).
 
 ***
