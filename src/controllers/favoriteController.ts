@@ -7,12 +7,24 @@ const prisma = new PrismaClient();
 // CREATE
 export async function createFavorite(req: Request, res: Response) {
     const favorite: Job = req.body;
+    let userId: number;
     // TODO: When we have authentication in place (JWT) we'll get userId from there
 
     try {
+        const authHeader = req.headers.authorization
+
+        if (!authHeader || !authHeader.startsWith("Bearer ")) {
+            res.status(401).json({message: "Missing or invalid web token"});
+            return;
+        }
+
+        userId = parseInt(authHeader.split(" ")[1]);
+        favorite.user_id = userId;
+
         const favoriteFound = await prisma.favorites.findUnique({
             where: {
                 id: favorite.id,
+                user_id: favorite.user_id,
             },
         });
 
@@ -34,13 +46,22 @@ export async function createFavorite(req: Request, res: Response) {
 
 // READ MANY
 export async function getFavorites(req: Request, res: Response) {
-    const { userId } = req.body;    // TODO: replace with auth-hantering
+    let userId: number;
 
     try {
+        const authHeader = req.headers.authorization
+
+        if (!authHeader || !authHeader.startsWith("Bearer ")) {
+            res.status(401).json({message: "Missing or invalid web token"});
+            return;
+        }
+
+        userId = parseInt(authHeader.split(" ")[1]);
+
         const favorites = await prisma.favorites.findMany({
             where: {
                 user_id: {
-                    equals: parseInt("1"),
+                    equals: userId,
                 },
             },
         })
@@ -57,13 +78,22 @@ export async function getFavorites(req: Request, res: Response) {
 
 // READ ONE
 export async function getFavorite(req: Request, res: Response) {
-    const { userId } = req.body;   // TODO: replace with auth-hantering
+    let userId: number;         // TODO: replace with auth-hantering
     const { id } = req.params;
 
     try {
+        const authHeader = req.headers.authorization
+
+        if (!authHeader || !authHeader.startsWith("Bearer ")) {
+            res.status(401).json({message: "Missing or invalid web token"});
+            return;
+        }
+
+        userId = parseInt(authHeader.split(" ")[1]);
+
         const favorite = await prisma.favorites.findUnique({
             where: {
-                user_id: parseInt(userId),
+                user_id: userId,
                 id: id,
             },
         });
@@ -82,13 +112,24 @@ export async function getFavorite(req: Request, res: Response) {
 
 // UPDATE
 export async function updateFavorite(req: Request, res: Response) {
-    const favorite: Job = req.body;  // TODO: replace with auth-hantering
+    const favorite: Job = req.body;
+    let userId: number;         // TODO: replace with auth-hantering
 
     try {
+        const authHeader = req.headers.authorization
+
+        if (!authHeader || !authHeader.startsWith("Bearer ")) {
+            res.status(401).json({message: "Missing or invalid web token"});
+            return;
+        }
+
+        userId = parseInt(authHeader.split(" ")[1]);
+        favorite.user_id = userId;
+
         const foundFavorite = await prisma.favorites.findUnique({
             where: {
                 id: favorite.id,
-                user_id: favorite.user_id,
+                user_id: userId,
             },
         });
         
@@ -118,14 +159,23 @@ export async function updateFavorite(req: Request, res: Response) {
 
 // DELETE
 export async function deleteFavorite(req: Request, res: Response) {
-    const { userId } = req.body;   // TODO: replace with auth-hantering
     const { id } = req.params;
+    let userId: number;         // TODO: replace with auth-hantering
 
     try {
+        const authHeader = req.headers.authorization
+
+        if (!authHeader || !authHeader.startsWith("Bearer ")) {
+            res.status(401).json({message: "Missing or invalid web token"});
+            return;
+        }
+
+        userId = parseInt(authHeader.split(" ")[1]);
+
         const foundFavorite = await prisma.favorites.findUnique({
             where: {
                 id: id,
-                user_id: parseInt(userId),
+                user_id: userId,
             },
         });
         
@@ -137,7 +187,7 @@ export async function deleteFavorite(req: Request, res: Response) {
         const deletedFavorite = await prisma.favorites.delete({
             where: {
                 id: id,
-                user_id: parseInt(userId),
+                user_id: userId,
             },
         })
 
