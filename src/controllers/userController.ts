@@ -43,7 +43,7 @@ export async function getUsers(req: Request, res: Response) {
     try {
         const users = await prisma.users.findMany();
 
-        res.status(200).json({message: "Users fetched successfully", users: users});
+        res.status(200).json(users);
     } catch(error) {
         console.error(error);
         res.status(500).json({message: `Internal server error\n${(error as Error).name}`, error: error});
@@ -66,7 +66,7 @@ export async function getUser(req: Request, res: Response) {
             return;
         }
 
-        res.status(200).json({message: "User fetched successfully", user: user});
+        res.status(200).json(user);
     } catch(error) {
         console.error(error);
         res.status(500).json({message: `Internal server error\n${(error as Error).name}`, error: error});
@@ -77,8 +77,25 @@ export async function getUser(req: Request, res: Response) {
 export async function updateUser(req: Request, res: Response) {
     const { id } = req.params; 
     const user: User = req.body;
+    let userId: number;
     
     try {
+        const authHeader = req.headers.authorization
+
+        if (!authHeader || !authHeader.startsWith("Bearer ")) {
+            res.status(401).json({message: "Missing or invalid web token"});
+            return;
+        }
+
+        userId = parseInt(authHeader.split(" ")[1]);
+
+        // Don't allow user to update other users
+        if(userId !== parseInt(id)) {
+            res.status(403).json({message: "Forbidden"});
+            return;
+        }
+        
+        // Find user to update
         const foundUser = await prisma.users.findUnique({
             where: {
                 id: parseInt(id),
@@ -89,10 +106,13 @@ export async function updateUser(req: Request, res: Response) {
             res.status(404).json({message: "User not found"});
             return;
         }
+
+        // Validate user data
         if(user.email !== foundUser.email) {
             res.status(400).json({message: "Email cannot be updated"});
             return;
         }
+        
         const date = (user.dateOfBirth)? new Date(user.dateOfBirth): null;
         const currentDate = new Date();
         if(date && date > currentDate) {
@@ -100,6 +120,7 @@ export async function updateUser(req: Request, res: Response) {
             return;
         }
 
+        // Update user
         const updatedUser = await prisma.users.update({
             where: {
                 id: parseInt(id),
@@ -117,8 +138,25 @@ export async function updateUser(req: Request, res: Response) {
 // DELETE
 export async function deleteUser(req: Request, res: Response) {
         const { id } = req.params;
+        let userId: number;
 
         try {
+            const authHeader = req.headers.authorization
+
+            if (!authHeader || !authHeader.startsWith("Bearer ")) {
+                res.status(401).json({message: "Missing or invalid web token"});
+                return;
+            }
+    
+            userId = parseInt(authHeader.split(" ")[1]);
+
+            // Don't allow user to delete other users
+            if(userId !== parseInt(id)) {
+                res.status(403).json({message: "Forbidden"});
+                return;
+            }
+
+            // Find user to delete
             const foundUser = await prisma.users.findUnique({
                 where: {
                     id: parseInt(id),
@@ -130,6 +168,7 @@ export async function deleteUser(req: Request, res: Response) {
                 return;
             }
 
+            // Delete user
             const deletedUser = await prisma.users.delete({
                 where: {
                     id: parseInt(id),

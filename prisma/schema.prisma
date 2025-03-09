@@ -8,36 +8,44 @@ datasource db {
 }
 
 model favorites {
-  id       String    @id @db.VarChar(11)
-  user_id  Int
-  employer String    @db.VarChar(100)
-  logo_url String?   @db.VarChar(255)
-  headline String?   @db.VarChar(255)
-  position String?   @db.VarChar(255)
-  role     String?   @db.VarChar(255)
-  posted   DateTime? @db.DateTime(0)
-  expires  DateTime? @db.DateTime(0)
-  contract String    @db.VarChar(50)
-  city     String?   @db.VarChar(30)
-  region   String?   @db.VarChar(40)
-  country  String?   @db.VarChar(50)
-  url      String    @db.VarChar(255)
-  users    users     @relation(fields: [user_id], references: [id], onUpdate: Restrict, map: "user_id")
-
-  @@index([user_id], map: "user_id")
+  id              String            @id @db.VarChar(11)
+  employer        String            @db.VarChar(100)
+  logo_url        String?           @db.VarChar(255)
+  headline        String?           @db.VarChar(255)
+  position        String?           @db.VarChar(255)
+  role            String?           @db.VarChar(255)
+  posted          DateTime?         @db.DateTime(0)
+  expires         DateTime?         @db.DateTime(0)
+  contract        String            @db.VarChar(50)
+  city            String?           @db.VarChar(30)
+  region          String?           @db.VarChar(40)
+  country         String?           @db.VarChar(50)
+  url             String            @db.VarChar(255)
+  users_favorites users_favorites[]
 }
 
 model users {
-  id          Int         @id @default(autoincrement())
-  firstname   String      @db.VarChar(50)
-  lastname    String      @db.VarChar(50)
-  address     String?     @db.VarChar(50)
-  postalCode  String?     @db.VarChar(6)
-  city        String?     @db.VarChar(50)
-  country     String?     @db.VarChar(50)
-  phone       String      @db.VarChar(15)
-  dateOfBirth String?     @db.VarChar(30)
-  email       String      @unique(map: "email") @db.VarChar(255)
-  password    String      @db.VarChar(128)
-  favorites   favorites[]
+  id              Int               @id @default(autoincrement())
+  firstname       String            @db.VarChar(50)
+  lastname        String            @db.VarChar(50)
+  address         String?           @db.VarChar(50)
+  postalCode      String?           @db.VarChar(6)
+  city            String?           @db.VarChar(50)
+  country         String?           @db.VarChar(50)
+  phone           String            @db.VarChar(15)
+  dateOfBirth     String?           @db.VarChar(30)
+  email           String            @unique(map: "email") @db.VarChar(255)
+  password        String            @db.VarChar(128)
+  users_favorites users_favorites[]
+}
+
+model users_favorites {
+  id          Int       @id @default(autoincrement())
+  user_id     Int
+  favorite_id String    @db.VarChar(11)
+  favorites   favorites @relation(fields: [favorite_id], references: [id], onUpdate: Restrict, map: "favorite_id")
+  users       users     @relation(fields: [user_id], references: [id], onUpdate: Restrict, map: "user_id")
+
+  @@index([favorite_id], map: "favorite_id")
+  @@index([user_id], map: "user_id")
 }
