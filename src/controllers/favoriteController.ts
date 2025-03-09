@@ -20,6 +20,18 @@ export async function createFavorite(req: Request, res: Response) {
 
         userId = parseInt(authHeader.split(" ")[1]);
         
+        // Check that user exists
+        const userFound = await prisma.users.findUnique({
+            where: {
+                id: userId,
+            },
+        });
+
+        if(!userFound) {
+            res.status(401).json({message: "User not found"});
+            return;
+        }
+
         // Check if favorite already exists for user
         const usersFavoritesFound = await prisma.users_favorites.findFirst({
             where: {
@@ -76,6 +88,18 @@ export async function getFavorites(req: Request, res: Response) {
 
         userId = parseInt(authHeader.split(" ")[1]);
 
+        // Check that user exists
+        const userFound = await prisma.users.findUnique({
+            where: {
+                id: userId,
+            },
+        });
+
+        if(!userFound) {
+            res.status(401).json({message: "User not found"});
+            return;
+        }
+        
         // Get all favorites mappings for user
         const usersFavoritesFound = await prisma.users_favorites.findMany({
             where: {
@@ -83,12 +107,7 @@ export async function getFavorites(req: Request, res: Response) {
                     equals: userId,
                 },
             },
-        })
-
-        if (usersFavoritesFound.length === 0) {
-            res.status(404).json({message: "Favorites not found"});
-            return;
-        }
+        });
 
         // Get all favorites for user
         const favoritesFound = await prisma.favorites.findMany({
@@ -97,7 +116,7 @@ export async function getFavorites(req: Request, res: Response) {
                     in: usersFavoritesFound.map(favorite => favorite.favorite_id),
                 },
             },
-        })
+        });
 
         res.status(200).json(favoritesFound);
     } catch(error) {
@@ -120,6 +139,18 @@ export async function getFavorite(req: Request, res: Response) {
         }
 
         userId = parseInt(authHeader.split(" ")[1]);
+
+        // Check that user exists
+        const userFound = await prisma.users.findUnique({
+            where: {
+                id: userId,
+            },
+        });
+
+        if(!userFound) {
+            res.status(401).json({message: "User not found"});
+            return;
+        }
 
         // Get favorite mapping for user
         const usersFavoritesFound = await prisma.users_favorites.findFirst({
@@ -168,6 +199,18 @@ export async function updateFavorite(req: Request, res: Response) {
 
         userId = parseInt(authHeader.split(" ")[1]);
 
+        // Check that user exists
+        const userFound = await prisma.users.findUnique({
+            where: {
+                id: userId,
+            },
+        });
+
+        if(!userFound) {
+            res.status(401).json({message: "User not found"});
+            return;
+        }
+
         // Get favorite mapping for user
         const usersFavoritesFound = await prisma.users_favorites.findFirst({
             where: {
@@ -194,7 +237,7 @@ export async function updateFavorite(req: Request, res: Response) {
         }
 
         if(favorite.id !== favoriteFound.id) {
-            res.status(400).json({message: "Id cannot be updated"});
+            res.status(400).json({message: "Update of 'id' is not allowed"});
             return;
         }
 
@@ -228,6 +271,18 @@ export async function deleteFavorite(req: Request, res: Response) {
         }
 
         userId = parseInt(authHeader.split(" ")[1]);
+
+        // Check that user exists
+        const userFound = await prisma.users.findUnique({
+            where: {
+                id: userId,
+            },
+        });
+
+        if(!userFound) {
+            res.status(401).json({message: "User not found"});
+            return;
+        }
 
         // Check if favorite already exists for user
         usersFavoritesFound = await prisma.users_favorites.findFirst({

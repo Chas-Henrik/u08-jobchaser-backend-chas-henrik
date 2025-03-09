@@ -62,7 +62,7 @@ export async function getUser(req: Request, res: Response) {
         });
 
         if(!user) {
-            res.status(404).json({message: "User not found"});
+            res.status(401).json({message: "User not found"});
             return;
         }
 
@@ -103,13 +103,13 @@ export async function updateUser(req: Request, res: Response) {
         });
         
         if(!foundUser) {
-            res.status(404).json({message: "User not found"});
+            res.status(401).json({message: "User not found"});
             return;
         }
 
         // Validate user data
         if(user.email !== foundUser.email) {
-            res.status(400).json({message: "Email cannot be updated"});
+            res.status(400).json({message: "Update of 'email' is not allowed"});
             return;
         }
         
@@ -164,7 +164,7 @@ export async function deleteUser(req: Request, res: Response) {
             });
             
             if(!foundUser) {
-                res.status(404).json({message: "User not found"});
+                res.status(401).json({message: "User not found"});
                 return;
             }
 
