@@ -18,7 +18,7 @@ and supports the following routes & methods:
 
 The Users & Favorites resources are in a 'Many to Many' relationship, and thus 3 DB Tables (users, favorites & user_favorites) are needed 'under the hood' to support this relationship.
 
-The **PORT** can be configured through the **PORT** environment variable (and defaults to 3000 if not configured).
+The **PORT** can be configured through the **PORT** environment variable (and defaults to 3008 if not configured).
 The **DATABASE_URL** must be configured through the environment variable and has been set to 
 `mysql://root:root@localhost:3306/job-chaser-prisma` 
 during development.
