@@ -1,14 +1,22 @@
 # Job Chaser Backend
 
-The Job Chaser backend uses NodeJS, Express & Prisma and support the following routes & methods:  
+The Job Chaser backend uses NodeJS, Express & Prisma.
+
+The Job Chaser backend have two resources:  
+- Users
+- Favorites 
+
+and supports the following routes & methods:  
   
 **Users routes:**
 - /users (POST & GET method)
 - /users/:id (GET, PUT & DELETE method)
   
 **Favorites routes:**
-- /favorites (POST, GET & PUT method)
-- /favorites/:id (GET & DELETE method)
+- /favorites (POST, GET method)
+- /favorites/:id (GET, PUT & DELETE method)
+
+The Users & Favorites resources are in a 'Many to Many' relationship, and thus 3 DB Tables (users, favorites & user_favorites) are needed 'under the hood' to support this relationship.
 
 The **PORT** can be configured through the **PORT** environment variable (and defaults to 3000 if not configured).
 The **DATABASE_URL** must be configured through the environment variable and has been set to 
