@@ -64,5 +64,6 @@ The site has been published on Vercel:
 *Notes:*
   
 1. As the favorite DB Table is shared among the users, all users will be affected if one user updates a favorite (with the PUT method).
+2. The primary key for the favorites table is recycled from the JobTechDev API (see [https://jobsearch.api.jobtechdev.se/](https://jobsearch.api.jobtechdev.se/)).
 
 ***
