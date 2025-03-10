@@ -2,9 +2,41 @@
 
 The Job Chaser backend uses NodeJS, Express & Prisma.
 
-The Job Chaser backend have two resources:  
-- Users
-- Favorites 
+The Job Chaser backend supports the following resources:  
+**Users:**
+```
+type User = {
+    firstname: string;
+    lastname: string;
+    address?: string | null;
+    postalCode?: string | null;
+    city?: string | null;
+    country?: string | null;
+    phone: string;
+    dateOfBirth?: string | null;
+    email: string;
+    password: string;
+}
+```
+  
+**Favorites:**
+```
+type Favorite = {
+    id: string;
+    employer: string;
+    logo_url?: string | null;
+    headline?: string | null;
+    position?: string | null;
+    role?: string;
+    posted?: Date | null;
+    expires?: Date | null;
+    contract: string;
+    city?: string | null;
+    region?: string | null;
+    country?: string | null;
+    url: string;
+}
+``` 
 
 and supports the following routes & methods:  
   
