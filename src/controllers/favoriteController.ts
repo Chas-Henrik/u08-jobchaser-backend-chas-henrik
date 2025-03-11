@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 // CREATE
 export async function createFavorite(req: Request, res: Response) {
     const favorite: Favorite = req.body;
-    let userId: number;
+    let userId: string;
     // TODO: When we have authentication in place (JWT) we'll get userId from there
 
     try {
@@ -18,7 +18,7 @@ export async function createFavorite(req: Request, res: Response) {
             return;
         }
 
-        userId = parseInt(authHeader.split(" ")[1]);
+        userId = authHeader.split(" ")[1];
         
         // Check that user exists
         const userFound = await prisma.users.findUnique({
@@ -76,7 +76,7 @@ export async function createFavorite(req: Request, res: Response) {
 
 // READ MANY
 export async function getFavorites(req: Request, res: Response) {
-    let userId: number;
+    let userId: string;
 
     try {
         const authHeader = req.headers.authorization
@@ -86,7 +86,7 @@ export async function getFavorites(req: Request, res: Response) {
             return;
         }
 
-        userId = parseInt(authHeader.split(" ")[1]);
+        userId = authHeader.split(" ")[1];
 
         // Check that user exists
         const userFound = await prisma.users.findUnique({
@@ -127,7 +127,7 @@ export async function getFavorites(req: Request, res: Response) {
 
 // READ ONE
 export async function getFavorite(req: Request, res: Response) {
-    let userId: number;         // TODO: replace with auth-hantering
+    let userId: string;         // TODO: replace with auth-hantering
     const { id } = req.params;
 
     try {
@@ -138,7 +138,7 @@ export async function getFavorite(req: Request, res: Response) {
             return;
         }
 
-        userId = parseInt(authHeader.split(" ")[1]);
+        userId = authHeader.split(" ")[1];
 
         // Check that user exists
         const userFound = await prisma.users.findUnique({
@@ -187,7 +187,7 @@ export async function getFavorite(req: Request, res: Response) {
 // UPDATE
 export async function updateFavorite(req: Request, res: Response) {
     const favorite: Favorite = req.body;
-    let userId: number;         // TODO: replace with auth-hantering
+    let userId: string;         // TODO: replace with auth-hantering
     const { id } = req.params;
     try {
         const authHeader = req.headers.authorization
@@ -197,7 +197,7 @@ export async function updateFavorite(req: Request, res: Response) {
             return;
         }
 
-        userId = parseInt(authHeader.split(" ")[1]);
+        userId = authHeader.split(" ")[1];
 
         // Check that user exists
         const userFound = await prisma.users.findUnique({
@@ -259,7 +259,7 @@ export async function updateFavorite(req: Request, res: Response) {
 // DELETE
 export async function deleteFavorite(req: Request, res: Response) {
     const { id } = req.params;
-    let userId: number;         // TODO: replace with auth-hantering
+    let userId: string;         // TODO: replace with auth-hantering
 
     try {
         const authHeader = req.headers.authorization
@@ -270,7 +270,7 @@ export async function deleteFavorite(req: Request, res: Response) {
             return;
         }
 
-        userId = parseInt(authHeader.split(" ")[1]);
+        userId = authHeader.split(" ")[1];
 
         // Check that user exists
         const userFound = await prisma.users.findUnique({

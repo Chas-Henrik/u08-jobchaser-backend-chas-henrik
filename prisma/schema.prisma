@@ -25,7 +25,7 @@ model favorites {
 }
 
 model users {
-  id              Int               @id @default(autoincrement())
+  id              String            @id @default(uuid())
   firstname       String            @db.VarChar(50)
   lastname        String            @db.VarChar(50)
   address         String?           @db.VarChar(50)
@@ -41,7 +41,7 @@ model users {
 
 model users_favorites {
   id          Int       @id @default(autoincrement())
-  user_id     Int
+  user_id     String    
   favorite_id String    @db.VarChar(11)
   favorites   favorites @relation(fields: [favorite_id], references: [id], onUpdate: Restrict, map: "favorite_id")
   users       users     @relation(fields: [user_id], references: [id], onUpdate: Restrict, map: "user_id")
