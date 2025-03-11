@@ -1,29 +1,29 @@
 import { Request, Response } from "express"
 import { Favorite } from "../types"
 import { PrismaClient } from '@prisma/client'
+import jwt, { JwtPayload } from "jsonwebtoken"
 
 const prisma = new PrismaClient();
 
+interface ProtectedRequest extends Request {
+    user?: JwtPayload;
+}
+
 // CREATE
-export async function createFavorite(req: Request, res: Response) {
+export async function createFavorite(req: ProtectedRequest, res: Response) {
     const favorite: Favorite = req.body;
-    let userId: string;
-    // TODO: When we have authentication in place (JWT) we'll get userId from there
 
     try {
-        const authHeader = req.headers.authorization
-
-        if (!authHeader || !authHeader.startsWith("Bearer ")) {
-            res.status(401).json({message: "Missing or invalid web token"});
+        // Assure that req.user is defined
+        if(!req.user) {
+            res.status(500).json({message: "req.user is not defined"});
             return;
         }
 
-        userId = authHeader.split(" ")[1];
-        
         // Check that user exists
         const userFound = await prisma.users.findUnique({
             where: {
-                id: userId,
+                id: req.user.id,
             },
         });
 
@@ -35,7 +35,7 @@ export async function createFavorite(req: Request, res: Response) {
         // Check if favorite already exists for user
         const usersFavoritesFound = await prisma.users_favorites.findFirst({
             where: {
-                user_id: userId,
+                user_id: req.user.id,
                 favorite_id: favorite.id,
             },
         });
@@ -62,7 +62,7 @@ export async function createFavorite(req: Request, res: Response) {
         // Add favorite to user
         await prisma.users_favorites.create({
             data: {
-                user_id: userId,
+                user_id: req.user.id,
                 favorite_id: favorite.id,
             },
         });
@@ -75,23 +75,18 @@ export async function createFavorite(req: Request, res: Response) {
 };
 
 // READ MANY
-export async function getFavorites(req: Request, res: Response) {
-    let userId: string;
-
+export async function getFavorites(req: ProtectedRequest, res: Response) {
     try {
-        const authHeader = req.headers.authorization
-
-        if (!authHeader || !authHeader.startsWith("Bearer ")) {
-            res.status(401).json({message: "Missing or invalid web token"});
+        // Assure that req.user is defined
+        if(!req.user) {
+            res.status(500).json({message: "req.user is not defined"});
             return;
         }
-
-        userId = authHeader.split(" ")[1];
 
         // Check that user exists
         const userFound = await prisma.users.findUnique({
             where: {
-                id: userId,
+                id: req.user.id,
             },
         });
 
@@ -104,7 +99,7 @@ export async function getFavorites(req: Request, res: Response) {
         const usersFavoritesFound = await prisma.users_favorites.findMany({
             where: {
                 user_id: {
-                    equals: userId,
+                    equals: req.user.id,
                 },
             },
         });
@@ -126,24 +121,20 @@ export async function getFavorites(req: Request, res: Response) {
 };
 
 // READ ONE
-export async function getFavorite(req: Request, res: Response) {
-    let userId: string;         // TODO: replace with auth-hantering
+export async function getFavorite(req: ProtectedRequest, res: Response) {
     const { id } = req.params;
 
     try {
-        const authHeader = req.headers.authorization
-
-        if (!authHeader || !authHeader.startsWith("Bearer ")) {
-            res.status(401).json({message: "Missing or invalid web token"});
+        // Assure that req.user is defined
+        if(!req.user) {
+            res.status(500).json({message: "req.user is not defined"});
             return;
         }
-
-        userId = authHeader.split(" ")[1];
 
         // Check that user exists
         const userFound = await prisma.users.findUnique({
             where: {
-                id: userId,
+                id: req.user.id,
             },
         });
 
@@ -155,7 +146,7 @@ export async function getFavorite(req: Request, res: Response) {
         // Get favorite mapping for user
         const usersFavoritesFound = await prisma.users_favorites.findFirst({
             where: {
-                user_id: userId,
+                user_id: req.user.id,
                 favorite_id: id,
             },
         });
@@ -185,24 +176,20 @@ export async function getFavorite(req: Request, res: Response) {
 };
 
 // UPDATE
-export async function updateFavorite(req: Request, res: Response) {
+export async function updateFavorite(req: ProtectedRequest, res: Response) {
     const favorite: Favorite = req.body;
-    let userId: string;         // TODO: replace with auth-hantering
     const { id } = req.params;
     try {
-        const authHeader = req.headers.authorization
-
-        if (!authHeader || !authHeader.startsWith("Bearer ")) {
-            res.status(401).json({message: "Missing or invalid web token"});
+        // Assure that req.user is defined
+        if(!req.user) {
+            res.status(500).json({message: "req.user is not defined"});
             return;
         }
-
-        userId = authHeader.split(" ")[1];
 
         // Check that user exists
         const userFound = await prisma.users.findUnique({
             where: {
-                id: userId,
+                id: req.user.id,
             },
         });
 
@@ -214,7 +201,7 @@ export async function updateFavorite(req: Request, res: Response) {
         // Get favorite mapping for user
         const usersFavoritesFound = await prisma.users_favorites.findFirst({
             where: {
-                user_id: userId,
+                user_id: req.user.id,
                 favorite_id: id,
             },
         });
@@ -257,25 +244,22 @@ export async function updateFavorite(req: Request, res: Response) {
 };
 
 // DELETE
-export async function deleteFavorite(req: Request, res: Response) {
+export async function deleteFavorite(req: ProtectedRequest, res: Response) {
     const { id } = req.params;
-    let userId: string;         // TODO: replace with auth-hantering
 
     try {
-        const authHeader = req.headers.authorization
         let usersFavoritesFound;
-
-        if (!authHeader || !authHeader.startsWith("Bearer ")) {
-            res.status(401).json({message: "Missing or invalid web token"});
+        
+        // Assure that req.user is defined
+        if(!req.user) {
+            res.status(500).json({message: "req.user is not defined"});
             return;
         }
-
-        userId = authHeader.split(" ")[1];
 
         // Check that user exists
         const userFound = await prisma.users.findUnique({
             where: {
-                id: userId,
+                id: req.user.id,
             },
         });
 
@@ -287,7 +271,7 @@ export async function deleteFavorite(req: Request, res: Response) {
         // Check if favorite already exists for user
         usersFavoritesFound = await prisma.users_favorites.findFirst({
             where: {
-                user_id: userId,
+                user_id: req.user.id,
                 favorite_id: id,
             },
         });
@@ -300,7 +284,7 @@ export async function deleteFavorite(req: Request, res: Response) {
         // Delete users_favorites entry
         await prisma.users_favorites.deleteMany({
             where: {
-                user_id: userId,
+                user_id: req.user.id,
                 favorite_id: id,
             },
         });

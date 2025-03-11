@@ -1,41 +1,13 @@
 import { Request, Response } from "express"
 import { User } from "../types";
 import { PrismaClient } from '@prisma/client'
+import { JwtPayload } from "jsonwebtoken"
 
 const prisma = new PrismaClient();
 
-// CREATE
-export async function createUser(req: Request, res: Response) {
-    const user: User = req.body;
-    try {
-        const userFound = await prisma.users.findUnique({
-            where: {
-                email: user.email,
-            },
-        });
-
-        if(userFound) {
-            res.status(409).json({message: "User already exists"});
-            return;
-        }
-
-        const date = (user.dateOfBirth)? new Date(user.dateOfBirth): null;
-        const currentDate = new Date();
-        if(date && date > currentDate) {
-            res.status(400).json({message: "Date of Birth cannot be in the future"});
-            return;
-        }
-
-        const result = await prisma.users.create({
-            data: user,
-        })
-
-        res.status(201).json({message: "User created successfully", result: result});
-    } catch(error) {
-        console.error(error);
-        res.status(500).json({message: `Internal server error\n\n${error}`});
-    }
-};
+interface ProtectedRequest extends Request {
+    user?: JwtPayload;
+}
 
 // READ MANY
 export async function getUsers(req: Request, res: Response) {
@@ -74,34 +46,30 @@ export async function getUser(req: Request, res: Response) {
 }
 
 // UPDATE 
-export async function updateUser(req: Request, res: Response) {
+export async function updateUser(req: ProtectedRequest, res: Response) {
     const { id } = req.params; 
     const user: User = req.body;
-    let userId: string;
     
     try {
-        const authHeader = req.headers.authorization
-
-        if (!authHeader || !authHeader.startsWith("Bearer ")) {
-            res.status(401).json({message: "Missing or invalid web token"});
+        // Assure that req.user is defined
+        if(!req.user) {
+            res.status(500).json({message: "req.user is not defined"});
             return;
         }
 
-        userId = authHeader.split(" ")[1];
-
         // Don't allow user to update other users
-        if(userId !== id) {
+        if(req.user.id !== id) {
             res.status(403).json({message: "Forbidden"});
             return;
         }
-        
+
         // Find user to update
         const foundUser = await prisma.users.findUnique({
             where: {
                 id: id,
             },
         });
-        
+
         if(!foundUser) {
             res.status(401).json({message: "User not found"});
             return;
@@ -112,7 +80,7 @@ export async function updateUser(req: Request, res: Response) {
             res.status(400).json({message: "Update of 'email' is not allowed"});
             return;
         }
-        
+
         const date = (user.dateOfBirth)? new Date(user.dateOfBirth): null;
         const currentDate = new Date();
         if(date && date > currentDate) {
@@ -136,22 +104,18 @@ export async function updateUser(req: Request, res: Response) {
 };
 
 // DELETE
-export async function deleteUser(req: Request, res: Response) {
+export async function deleteUser(req: ProtectedRequest, res: Response) {
         const { id } = req.params;
-        let userId: string;
 
         try {
-            const authHeader = req.headers.authorization
-
-            if (!authHeader || !authHeader.startsWith("Bearer ")) {
-                res.status(401).json({message: "Missing or invalid web token"});
+            // Assure that req.user is defined
+            if(!req.user) {
+                res.status(500).json({message: "req.user is not defined"});
                 return;
             }
-    
-            userId = authHeader.split(" ")[1];
 
             // Don't allow user to delete other users
-            if(userId !== id) {
+            if(req.user.id !== id) {
                 res.status(403).json({message: "Forbidden"});
                 return;
             }
