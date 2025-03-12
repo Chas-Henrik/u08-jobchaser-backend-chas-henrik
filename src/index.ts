@@ -6,8 +6,6 @@ import userRoutes from "./routes/userRoutes";
 import favoriteRoutes from "./routes/favoriteRoutes"
 import dotenv from "dotenv";
 
-dotenv.config();
-
 const PORT = process.env.PORT || 3008;
 const app = express();
 
