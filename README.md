@@ -45,7 +45,10 @@ The following routes & methods are supported:
 - /favorites (POST, GET method)
 - /favorites/:id (GET, PUT & DELETE method)
 
-The Users & Favorites resources are in a 'Many to Many' relationship, and 3 DB Tables (users, favorites & user_favorites) are needed 'under the hood' to support this relationship.
+The Users & Favorites resources are in a 'Many to Many' relationship, and 3 DB Tables (users, favorites & user_favorites) are used to support this relationship.
+
+A JWT token is used for authorization and is returned in the body after a successful Sign-In. 
+The JWT token is then sent in the Authorization Bearer header after that for routes that needs authorization.
 
 The **PORT** can be configured through the **PORT** environment variable (and defaults to 3008 if not configured).
 The **DATABASE_URL** must be configured through the environment variable and has been set to 
