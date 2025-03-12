@@ -1,13 +1,12 @@
 import express from "express"
-import { getUser, getUsers, updateUser, deleteUser } from "../controllers/userController";
+import { getUser, updateUser, deleteUser } from "../controllers/userController";
 import { authMiddleware } from "../middleware/authorize";
 
 const router = express.Router()
 
 // CRUD for users
-router.get("/", getUsers);
-router.get("/:id", getUser);
-router.put("/:id", authMiddleware, updateUser);
-router.delete("/:id", authMiddleware, deleteUser);
+router.get("/", authMiddleware, getUser);
+router.put("/", authMiddleware, updateUser);
+router.delete("/", authMiddleware, deleteUser);
 
 export default router;

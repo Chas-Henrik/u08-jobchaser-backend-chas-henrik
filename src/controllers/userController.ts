@@ -9,32 +9,24 @@ interface ProtectedRequest extends Request {
     user?: JwtPayload;
 }
 
-// READ MANY
-export async function getUsers(req: Request, res: Response) {
-
-    try {
-        const users = await prisma.users.findMany();
-
-        res.status(200).json(users);
-    } catch(error) {
-        console.error(error);
-        res.status(500).json({message: `Internal server error\n\n${error}`});
-    }
-};
-
 // READ ONE
-export async function getUser(req: Request, res: Response) {
-    const { id } = req.params;
-
+export async function getUser(req: ProtectedRequest, res: Response) {
     try {
+        // Assure that req.user is defined
+        if(!req.user) {
+            res.status(500).json({message: "req.user is not defined"});
+            return;
+        }
+
+        // Find user
         const user = await prisma.users.findUnique({
             where: {
-                id: id,
+                id: req.user.id,
             },
         });
 
         if(!user) {
-            res.status(401).json({message: "User not found"});
+            res.status(404).json({message: "User not found"});
             return;
         }
 
@@ -47,7 +39,6 @@ export async function getUser(req: Request, res: Response) {
 
 // UPDATE 
 export async function updateUser(req: ProtectedRequest, res: Response) {
-    const { id } = req.params; 
     const user: User = req.body;
     
     try {
@@ -57,21 +48,15 @@ export async function updateUser(req: ProtectedRequest, res: Response) {
             return;
         }
 
-        // Don't allow user to update other users
-        if(req.user.id !== id) {
-            res.status(403).json({message: "Forbidden"});
-            return;
-        }
-
         // Find user to update
         const foundUser = await prisma.users.findUnique({
             where: {
-                id: id,
+                id: req.user.id,
             },
         });
 
         if(!foundUser) {
-            res.status(401).json({message: "User not found"});
+            res.status(404).json({message: "User not found"});
             return;
         }
 
@@ -91,7 +76,7 @@ export async function updateUser(req: ProtectedRequest, res: Response) {
         // Update user
         const updatedUser = await prisma.users.update({
             where: {
-                id: id,
+                id: req.user.id,
             },
             data: user,
         })
@@ -105,8 +90,6 @@ export async function updateUser(req: ProtectedRequest, res: Response) {
 
 // DELETE
 export async function deleteUser(req: ProtectedRequest, res: Response) {
-        const { id } = req.params;
-
         try {
             // Assure that req.user is defined
             if(!req.user) {
@@ -114,31 +97,25 @@ export async function deleteUser(req: ProtectedRequest, res: Response) {
                 return;
             }
 
-            // Don't allow user to delete other users
-            if(req.user.id !== id) {
-                res.status(403).json({message: "Forbidden"});
-                return;
-            }
-
             // Find user to delete
             const foundUser = await prisma.users.findUnique({
                 where: {
-                    id: id,
+                    id: req.user.id,
                 },
             });
-            
+
             if(!foundUser) {
-                res.status(401).json({message: "User not found"});
+                res.status(404).json({message: "User not found"});
                 return;
             }
 
             // Delete user
             const deletedUser = await prisma.users.delete({
                 where: {
-                    id: id,
+                    id: req.user.id,
                 },
             })
-    
+
             res.status(200).json({message: "User deleted successfully", deletedUser: deletedUser});
         } catch(error) {
             console.error(error);

@@ -39,8 +39,7 @@ type Favorite = {
 The following routes & methods are supported:  
   
 **Users routes:**
-- /users (POST & GET method)
-- /users/:id (GET, PUT & DELETE method)
+- /users (POST & GET, PUT & DELETE method)
   
 **Favorites routes:**
 - /favorites (POST, GET method)
@@ -65,5 +64,6 @@ The site has been published on Vercel:
   
 1. As the favorite DB Table is shared among the users, all users will be affected if one user updates a favorite (with the PUT method).
 2. The primary key for the favorites table is recycled from the JobTechDev API (see [https://jobsearch.api.jobtechdev.se/](https://jobsearch.api.jobtechdev.se/)).
+3. `/users GET` gets the currently signed-in user (and not all users).
 
 ***
