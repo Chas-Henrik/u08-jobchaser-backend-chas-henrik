@@ -7,15 +7,18 @@ interface ProtectedRequest extends Request {
 
 // Middleware 
 export function authMiddleware(req: ProtectedRequest, res: Response, next: NextFunction) {
-    // Get token from Authorization Bearer in request header
-    const authHeader = req.headers.authorization
-
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-        res.status(401).json({message: "Un-authorized, missing or invalid web token"});
+    // Check that req.cookies is defined
+    if (!req.cookies) {
+        res.status(401).json({message: "Un-authorized, missing Cookies header"});
         return;
     }
 
-    const bearerToken = authHeader.split(" ")[1];
+    const token = req.cookies.token;
+
+    if(!token) {
+        res.status(401).json({ message: "Un-authorized, missing or invalid JSON Web token"});
+        return;
+    }
 
     // Check JWT SECRET is defined
     if(!process.env.JWT_SECRET) {
@@ -25,7 +28,7 @@ export function authMiddleware(req: ProtectedRequest, res: Response, next: NextF
 
     // Check that token is valid
     try {
-        const decoded = jwt.verify(bearerToken, process.env.JWT_SECRET) as JwtPayload
+        const decoded = jwt.verify(token, process.env.JWT_SECRET) as JwtPayload
         req.user = decoded;
         console.log("req.user", req.user);
         next();

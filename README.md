@@ -47,8 +47,8 @@ The following routes & methods are supported:
 
 The Users & Favorites resources are in a 'Many to Many' relationship, and 3 DB Tables (users, favorites & user_favorites) are used to support this relationship.
 
-A JWT token is used for authorization and is returned in the body after a successful Sign-In. 
-The JWT token is then sent in the Authorization Bearer header after that for routes that needs authorization.
+A JWT token is used for authorization and is returned as a Cookie after a successful Sign-In. 
+The Cookie is automatically included in the Cookies header for all subsequent calls to the backend API, and the user is authorized for each route that require authorization.
 
 The **PORT** can be configured through the **PORT** environment variable (and defaults to 3008 if not configured).
 The **DATABASE_URL** must be configured through the environment variable and has been set to 

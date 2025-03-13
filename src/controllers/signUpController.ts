@@ -11,6 +11,12 @@ export async function signUp(req: Request, res: Response) {
     try {
         const user: User = req.body;
         
+        // Validate user object
+        if(!user) {
+            res.status(400).json({message: "User object is required"});
+            return;
+        }
+
         // Check if user already exists
         const userFound = await prisma.users.findUnique({
             where: {

@@ -12,7 +12,7 @@ interface ProtectedRequest extends Request {
 // READ ONE
 export async function getUser(req: ProtectedRequest, res: Response) {
     try {
-        // Assure that req.user is defined
+        // Check if req.user is defined
         if(!req.user) {
             res.status(500).json({message: "req.user is not defined"});
             return;
@@ -42,7 +42,13 @@ export async function updateUser(req: ProtectedRequest, res: Response) {
     const user: User = req.body;
     
     try {
-        // Assure that req.user is defined
+        // Validate user object
+        if(!user) {
+            res.status(400).json({message: "User object is required"});
+            return;
+        }
+        
+        // Check if req.user is defined
         if(!req.user) {
             res.status(500).json({message: "req.user is not defined"});
             return;
@@ -60,7 +66,7 @@ export async function updateUser(req: ProtectedRequest, res: Response) {
             return;
         }
 
-        // Validate user data
+        // Parameter validation
         if(user.email !== foundUser.email) {
             res.status(400).json({message: "Update of 'email' is not allowed"});
             return;
@@ -91,7 +97,7 @@ export async function updateUser(req: ProtectedRequest, res: Response) {
 // DELETE
 export async function deleteUser(req: ProtectedRequest, res: Response) {
         try {
-            // Assure that req.user is defined
+            // Check if req.user is defined
             if(!req.user) {
                 res.status(500).json({message: "req.user is not defined"});
                 return;

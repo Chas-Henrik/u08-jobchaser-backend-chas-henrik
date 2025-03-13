@@ -14,7 +14,7 @@ export async function createFavorite(req: ProtectedRequest, res: Response) {
     const favorite: Favorite = req.body;
 
     try {
-        // Assure that req.user is defined
+        // Check if req.user is defined
         if(!req.user) {
             res.status(500).json({message: "req.user is not defined"});
             return;
@@ -32,6 +32,17 @@ export async function createFavorite(req: ProtectedRequest, res: Response) {
             return;
         }
 
+        // Parameter validation
+        if(!favorite) {
+            res.status(400).json({message: "Favorite object is required"});
+            return;
+        }
+
+        if(!favorite.id) {
+            res.status(400).json({message: "Favorite 'id' is required"});
+            return;
+        }
+        
         // Check if favorite already exists for user
         const usersFavoritesFound = await prisma.users_favorites.findFirst({
             where: {
@@ -77,7 +88,7 @@ export async function createFavorite(req: ProtectedRequest, res: Response) {
 // READ MANY
 export async function getFavorites(req: ProtectedRequest, res: Response) {
     try {
-        // Assure that req.user is defined
+        // Check if req.user is defined
         if(!req.user) {
             res.status(500).json({message: "req.user is not defined"});
             return;
@@ -125,7 +136,7 @@ export async function getFavorite(req: ProtectedRequest, res: Response) {
     const { id } = req.params;
 
     try {
-        // Assure that req.user is defined
+        // Check if req.user is defined
         if(!req.user) {
             res.status(500).json({message: "req.user is not defined"});
             return;
@@ -180,7 +191,7 @@ export async function updateFavorite(req: ProtectedRequest, res: Response) {
     const favorite: Favorite = req.body;
     const { id } = req.params;
     try {
-        // Assure that req.user is defined
+        // Check if req.user is defined
         if(!req.user) {
             res.status(500).json({message: "req.user is not defined"});
             return;
@@ -195,6 +206,17 @@ export async function updateFavorite(req: ProtectedRequest, res: Response) {
 
         if(!userFound) {
             res.status(401).json({message: "User not found"});
+            return;
+        }
+
+        // Parameter validation
+        if(!favorite) {
+            res.status(400).json({message: "Favorite object is required"});
+            return;
+        }
+
+        if(!favorite.id) {
+            res.status(400).json({message: "Favorite 'id' is required"});
             return;
         }
 
@@ -250,7 +272,7 @@ export async function deleteFavorite(req: ProtectedRequest, res: Response) {
     try {
         let usersFavoritesFound;
         
-        // Assure that req.user is defined
+        // Check if req.user is defined
         if(!req.user) {
             res.status(500).json({message: "req.user is not defined"});
             return;

@@ -1,7 +1,7 @@
 import { Request, Response } from "express"
 import { PrismaClient } from '@prisma/client'
-import jwt, { JwtPayload } from "jsonwebtoken"
-import bcrypt from "bcrypt" 
+import jwt from "jsonwebtoken"
+import bcrypt from "bcrypt"
 
 const prisma = new PrismaClient();
 
@@ -25,7 +25,7 @@ export async function signIn(req: Request, res: Response) {
         })
     
         if(!dbUser) {
-            res.status(404).json({ message: "User does not exist"})
+            res.status(404).json({ message: "User not found"})
             return;
         }
     
@@ -47,7 +47,14 @@ export async function signIn(req: Request, res: Response) {
         const token = createJWT(dbUser.id, dbUser.email, process.env.JWT_SECRET);
         console.log(token);
 
-        res.status(200).json({message: "User signed-in successfully", token: token});
+        res.cookie('token', token, {
+            maxAge: 24 * 60 * 60 * 1000, // 24 hours
+            httpOnly: true,     // Prevents client-side JavaScript from accessing the cookie
+            secure: false,      // Ensures the browser only sends the cookie over HTTPS (disabled)
+            sameSite: 'strict', // Protects against cross-site request forgery attacks
+        });
+
+        res.status(200).json({message: "User signed-in successfully"});
     } catch(error) {
         console.error(error);
         res.status(500).json({message: `Internal server error\n\n${error}`});
