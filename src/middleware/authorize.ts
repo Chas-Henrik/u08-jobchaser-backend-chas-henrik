@@ -45,6 +45,7 @@ export function authSignOutMiddleware(req: ProtectedRequest, res: Response, next
         return;
     }
 
+    // Get JWT from Cookies header
     const token = req.cookies.token;
 
     // Check if user is already signed out
