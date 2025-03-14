@@ -38,8 +38,17 @@ type Favorite = {
 
 The following routes & methods are supported:  
   
+**SignUp routes:**
+- /sign-up (POST method)
+
+**SignIn routes:**
+- /sign-in (POST method)
+
+**SignOut routes:**
+- /sign-out (POST method)
+
 **Users routes:**
-- /users (POST & GET, PUT & DELETE method)
+- /users (GET, PUT & DELETE method)
   
 **Favorites routes:**
 - /favorites (POST, GET method)
