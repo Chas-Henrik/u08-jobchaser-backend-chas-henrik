@@ -56,8 +56,8 @@ The following routes & methods are supported:
 
 The Users & Favorites resources are in a 'Many to Many' relationship, and 3 DB Tables (users, favorites & user_favorites) are used to support this relationship.
 
-A JWT token is used for authorization and is returned as a Cookie after a successful Sign-In. 
-The Cookie is automatically included in the Cookies header for all subsequent calls to the backend API, and the user is authorized for each route that require authorization.
+A JWT token is used for authorization and is returned as a JWT Cookie after a successful Sign-In. 
+The JWT Cookie is automatically included in the Cookies header for all subsequent calls to the backend API, and the user is authorized for each route that require authorization. The JWT Cookie will expire after 15 mins forcing the user to sign-in again if he/she wishes to continue. 
 
 The **PORT** can be configured through the **PORT** environment variable (and defaults to 3008 if not configured).
 The **DATABASE_URL** must be configured through the environment variable and has been set to 
@@ -70,8 +70,8 @@ The site has been published on Vercel:
 ***
 *Known problems:*
   
-1. 
-
+1. The Web Browser just deletes the JWT Cookie from its storage when it expires, so it is not possible to detect an expired JWT. Since the user eventually will end up with a `401 Unauthorized` response after the expired Cookie is deleted, all accesses resulting in a `401 Unauthorized` will be redirected to `/signin`. This seems reasonable as if the user is 'Unauthorized' he/she needs to login to continue (even if it wasn't an expired JWT Cookie that caused the problem).
+  
 *Notes:*
   
 1. As the favorite DB Table is shared among the users, all users will be affected if one user updates a favorite (with the PUT method).
