@@ -8,7 +8,7 @@ const app = express();
 
 // Middleware
 app.use(cookieParser()); // !!!Ensure cookie-parser is used before authMiddleware is called!!!
-app.use(cors({ origin: "http://localhost:3000", methods: ["CREATE", "GET", "PUT", "POST", "DELETE"], credentials: true }));
+app.use(cors({ origin: ["http://localhost:3000", "http://localhost:3001"], methods: ["CREATE", "GET", "PUT", "POST", "DELETE"], credentials: true }));
 app.use(express.json());
 
 import signUpRoutes from "./routes/signUpRoutes";
