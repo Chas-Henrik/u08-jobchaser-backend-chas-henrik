@@ -48,7 +48,7 @@ export async function signIn(req: Request, res: Response) {
         console.log(token);
 
         res.cookie('token', token, {
-            maxAge: 24 * 60 * 60 * 1000, // 24 hours
+            maxAge: 15 * 60 * 1000, // 15 minutes
             httpOnly: true,     // Prevents client-side JavaScript from accessing the cookie
             secure: false,      // Ensures the browser only sends the cookie over HTTPS (disabled)
             sameSite: 'strict', // Protects against cross-site request forgery attacks

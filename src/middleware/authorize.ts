@@ -16,7 +16,7 @@ export function authMiddleware(req: ProtectedRequest, res: Response, next: NextF
     const token = req.cookies.token;
 
     if(!token) {
-        res.status(401).json({ message: "Un-authorized, missing or invalid JSON Web token"});
+        res.status(401).json({ message: "Un-authorized, expired, missing or invalid JSON Web token"});
         return;
     }
 
@@ -41,7 +41,7 @@ export function authMiddleware(req: ProtectedRequest, res: Response, next: NextF
 export function authSignOutMiddleware(req: ProtectedRequest, res: Response, next: NextFunction) {
     // Check that req.cookies is defined
     if (!req.cookies) {
-        res.status(401).json({message: "Un-authorized, missing Cookies header"});
+        res.status(401).json({message: "Un-authorized, expired, missing Cookies header"});
         return;
     }
 
