@@ -59,6 +59,13 @@ The Users & Favorites resources are in a 'Many to Many' relationship, and 3 DB T
 A JWT token is used for authorization and is returned as a JWT Cookie after a successful Sign-In. 
 The JWT Cookie is automatically included in the Cookies header for all subsequent calls to the backend API, and the user is authorized for each route that require authorization. The JWT Cookie will expire after 15 mins forcing the user to sign-in again if he/she wishes to continue. 
 
+CORS is enabled with the following settings:
+- origin: ["http://localhost:3000", "http://localhost:3001"]
+- methods: ["POST", "GET", "PUT",  "DELETE"]
+- credentials: true
+
+*Also note that credentials must be enabled when using JWT Cookies.*
+  
 The **PORT** can be configured through the **PORT** environment variable (and defaults to 3008 if not configured).
 The **DATABASE_URL** must be configured through the environment variable and has been set to 
 `mysql://root:root@localhost:3306/job-chaser-prisma` 
