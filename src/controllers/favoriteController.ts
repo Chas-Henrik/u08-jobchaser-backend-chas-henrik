@@ -290,7 +290,7 @@ export async function deleteFavorite(req: ProtectedRequest, res: Response) {
             return;
         }
 
-        // Check if favorite already exists for user
+        // Check if favorite(s) exists for user
         usersFavoritesFound = await prisma.users_favorites.findFirst({
             where: {
                 user_id: req.user.id,
@@ -318,6 +318,7 @@ export async function deleteFavorite(req: ProtectedRequest, res: Response) {
             },
         });
 
+        // Delete favorite if not in use by other users
         if(!usersFavoritesFound) {
             // Delete favorite entry
             await prisma.favorites.delete({
