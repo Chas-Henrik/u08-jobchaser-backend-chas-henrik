@@ -2,6 +2,9 @@ import { Request, Response } from "express"
 import { User } from "../types";
 import { PrismaClient } from '@prisma/client'
 import { JwtPayload } from "jsonwebtoken"
+import bcrypt from "bcrypt";
+
+const SALT_ROUNDS = parseInt(process.env.SALT_ROUNDS || "10");
 
 const prisma = new PrismaClient();
 
@@ -78,6 +81,12 @@ export async function updateUser(req: ProtectedRequest, res: Response) {
             res.status(400).json({message: "Date of Birth cannot be in the future"});
             return;
         }
+
+        // Create password hash
+        const hashedPassword = await bcrypt.hash(user.password, SALT_ROUNDS)
+
+        // Update password hash
+        user.password = hashedPassword;
 
         // Update user
         const updatedUser = await prisma.users.update({
