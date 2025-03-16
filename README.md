@@ -107,10 +107,9 @@ The **PORT** can be configured through the **PORT** environment variable (and de
 The **DATABASE_URL** must be configured through the environment variable and has been set to 
 `mysql://root:root@localhost:3306/job-chaser-prisma` 
 during development.
-
-The site has been published on Vercel:  
-[https://u07-individuell-uppgift-jobchaser-chas-henrik-nextjs.vercel.app/](https://u07-individuell-uppgift-jobchaser-chas-henrik-nextjs.vercel.app/)
-
+  
+The site has not been deployed and currently only runs on the local machine.
+  
 ***
 *Known problems:*
   
