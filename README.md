@@ -66,6 +66,43 @@ CORS is enabled with the following settings:
 
 *Also note that credentials must be enabled when using JWT Cookies.*
   
+Both the Users & Favorites resource data are validated with Express Validator before accepted, and here follows an example of valid Users & Favorites resource data that can be used for test purposes in Thunder Client:
+
+**Users resource data**
+```
+{
+    "firstname": "Pelle",
+    "lastname": "Svanslös",
+    "address": "Kattgatan 5",
+    "postalCode": "123 45",
+    "city": "Katerineholm",
+    "country": "Sweden",
+    "phone": "+46 (70) 718 0388",
+    "dateOfBirth": "1980-03-22",
+    "email": "pelle@chasacademy.se",
+    "password": "123456"
+}
+```
+
+**Favorites resource data**
+```
+{
+    "id": "29503793",
+    "employer": "Vattenfall AB",
+    "logo_url": "https://arbetsformedlingen.se/rest/agas/api/v1/arbetsplatser/88251606/logotyper/logo.png",
+    "headline": "Rutinerad och driven Fullstack-utvecklare",
+    "position": "Mjukvaru- och systemutvecklare m.fl.",
+    "role": "Systemutvecklare/Programmerare",
+    "posted": "2025-02-28T06:50:32.000Z",
+    "expires": "2025-03-30T21:59:59.000Z",
+    "contract": "Vanlig anställning",
+    "city": "Solna",
+    "region": "Stockholms län",
+    "country": "Sverige",
+    "url": "https://arbetsformedlingen.se/platsbanken/annonser/29503793"
+}
+```
+
 The **PORT** can be configured through the **PORT** environment variable (and defaults to 3008 if not configured).
 The **DATABASE_URL** must be configured through the environment variable and has been set to 
 `mysql://root:root@localhost:3306/job-chaser-prisma` 
