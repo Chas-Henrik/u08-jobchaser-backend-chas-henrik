@@ -79,7 +79,7 @@ export const validateFavorite = [
     .optional({ values: 'falsy' }) //Accept undefined, null & empty string
     .isString().withMessage('Logo URL must be a string')
     .trim().isURL().withMessage('Invalid Logo URL')
-    .trim().escape(),
+    .trim(),
   body('headline')
     .optional({ values: 'falsy' }) //Accept undefined, null & empty string
     .isString().withMessage('Headline must be a string')
@@ -127,7 +127,7 @@ export const validateFavorite = [
     .notEmpty().withMessage('URL is required')
     .isString().withMessage('URL must be a string')
     .trim().isURL().withMessage('Invalid URL')
-    .trim().escape(),
+    .trim(),
   (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
