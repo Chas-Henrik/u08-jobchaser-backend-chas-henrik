@@ -66,7 +66,7 @@ CORS is enabled with the following settings:
 
 *Also note that credentials must be enabled when using JWT Cookies.*
   
-Both the Users & Favorites resource data are validated with Express Validator before accepted, and here follows an example of valid Users & Favorites resource data that can be used for test purposes in Thunder Client:
+Both the Users & Favorites resource data are validated with Express Validator before accepted, and here follows an example of valid Users & Favorites resource data (that can be used for test purposes in Thunder Client):
 
 **Users resource data**
 ```
