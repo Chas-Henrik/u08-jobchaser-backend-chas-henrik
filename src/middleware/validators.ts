@@ -15,22 +15,22 @@ export const validateUser = [
     .trim().isLength({ min: 2 }).withMessage('Lastname must be at least 2 characters long')
     .trim().escape(),
   body('address')
-    .optional({ values: "null" }) //Accept empty string & null
+    .optional({ values: 'falsy' }) //Accept undefined, null & empty string
     .isString().withMessage('Address must be a string')
     .trim().isLength({ min: 2 }).withMessage('Address must be at least 2 characters long')
     .trim().escape(),
   body('postalCode')
-    .optional({ values: "null" }) //Accept empty string & null
+    .optional({ values: 'falsy' }) //Accept undefined, null & empty string
     .isString().withMessage('Postal code must be a string')
     .trim().isPostalCode('any').withMessage('Invalid postal code')
     .trim().escape(),
   body('city')
-    .optional({ values: "null" }) //Accept empty string & null
+    .optional({ values: 'falsy' }) //Accept undefined, null & empty string
     .isString().withMessage('City must be a string')
     .trim().isLength({ min: 2 }).withMessage('City must be at least 2 characters long')
     .trim().escape(),
   body('country')
-    .optional({ values: "null" }) //Accept empty string & null
+    .optional({ values: 'falsy' }) //Accept undefined, null & empty string
     .isString().withMessage('Country must be a string')
     .trim().isLength({ min: 2 }).withMessage('Country must be at least 2 characters long')
     .trim().escape(),
@@ -40,7 +40,7 @@ export const validateUser = [
     .trim().isString().matches(/^([\+]?[(]?[\d]{1,3}[)]?[-\s\.])?[(]?[\d]{1,3}[)]?[-\s\.][\d\-\s\.]{5,9}[\d]{1}$/).withMessage('Invalid phone number')
     .trim().escape(),
   body('dateOfBirth')
-    .optional({ values: "null" }) //Accept empty string & null
+    .optional({ values: 'falsy' }) //Accept undefined, null & empty string
     .isString().withMessage('Date of Birth must be a string')
     .trim().isISO8601().withMessage('Invalid date of birth')
     .trim().escape(),
@@ -76,31 +76,31 @@ export const validateFavorite = [
     .trim().isLength({ min: 1 }).withMessage('Employer must be at least 1 characters long')
     .trim().escape(),
   body('logo_url')
-    .optional({ values: "null" }) //Accept empty string & null
+    .optional({ values: 'falsy' }) //Accept undefined, null & empty string
     .isString().withMessage('Logo URL must be a string')
     .trim().isURL().withMessage('Invalid Logo URL')
     .trim().escape(),
   body('headline')
-    .optional({ values: "null" }) //Accept empty string & null
+    .optional({ values: 'falsy' }) //Accept undefined, null & empty string
     .isString().withMessage('Headline must be a string')
     .trim().isLength({ min: 2 }).withMessage('Headline must be at least 2 characters long')
     .trim().escape(),
   body('position')
-    .optional({ values: "null" }) //Accept empty string & null
+    .optional({ values: 'falsy' }) //Accept undefined, null & empty string
     .isString().withMessage('Position must be a string')
     .trim().isLength({ min: 2 }).withMessage('Position must be at least 2 characters long')
     .trim().escape(),
   body('role')
-    .optional({ values: "null" }) //Accept empty string & null
+    .optional({ values: 'falsy' }) //Accept undefined, null & empty string
     .isString().withMessage('Role must be a string')
     .trim().isLength({ min: 2 }).withMessage('Role must be at least 2 characters long')
     .trim().escape(),
   body('posted')
-    .optional({ values: "null" }) //Accept empty string & null
+    .optional({ values: 'falsy' }) //Accept undefined, null & empty string
     .trim().isISO8601().withMessage('posted must be a Date')
     .trim().escape(),
   body('expires')
-    .optional({ values: "null" }) //Accept empty string & null
+    .optional({ values: 'falsy' }) //Accept undefined, null & empty string
     .trim().isISO8601().withMessage('Expires must be a Date')
     .trim().escape(),
   body('contract')
@@ -109,17 +109,17 @@ export const validateFavorite = [
     .trim().isLength({ min: 1 }).withMessage('Contract must be at least 1 characters long')
     .trim().escape(),
   body('city')
-    .optional({ values: "null" }) //Accept empty string & null
+    .optional({ values: 'falsy' }) //Accept undefined, null & empty string
     .isString().withMessage('City must be a string')
     .trim().isLength({ min: 2 }).withMessage('City must be at least 2 characters long')
     .trim().escape(),
   body('region')
-    .optional({ values: "null" }) //Accept empty string & null
+    .optional({ values: 'falsy' }) //Accept undefined, null & empty string
     .isString().withMessage('Region must be a string')
     .trim().isLength({ min: 2 }).withMessage('Region must be at least 2 characters long')
     .trim().escape(),
   body('country')
-    .optional({ values: "null" }) //Accept empty string & null
+  .optional({ values: 'falsy' }) //Accept undefined, null & empty string
     .isString().withMessage('Country must be a string')
     .trim().isLength({ min: 2 }).withMessage('Country must be at least 2 characters long')
     .trim().escape(),
