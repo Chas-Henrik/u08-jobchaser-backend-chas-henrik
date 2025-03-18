@@ -48,7 +48,7 @@ export const validateUser = [
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       console.error("Validator Error", errors);
-      res.status(400).json({ errors: errors.array() });
+      res.status(400).json({ message: "Invalid user data", errors: errors.array() });
       return;
     }
     next();
@@ -110,7 +110,7 @@ export const validateFavorite = [
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       console.error("Validator Error", errors);
-      res.status(400).json({ errors: errors.array() });
+      res.status(400).json({ message: "Invalid favorite data", errors: errors.array() });
       return;
     }
     next();
