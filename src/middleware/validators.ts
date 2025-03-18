@@ -19,7 +19,8 @@ export const validateUser = [
   body('postalCode')
     .optional({ values: 'falsy' }) //Accept undefined, null & empty string
     .isString().withMessage('Postal code must be a string')
-    .trim().isPostalCode('any').withMessage('Invalid postal code'),
+    .trim().isPostalCode('any').withMessage('Invalid postal code')
+    .escape(),
   body('city')
     .optional({ values: 'falsy' }) //Accept undefined, null & empty string
     .isString().withMessage('City must be a string')
@@ -31,11 +32,13 @@ export const validateUser = [
   body('phone')
     .notEmpty().withMessage('Phone number is required')
     .isString().withMessage('Phone must be a string')
-    .trim().isString().matches(/^([\+]?[(]?[\d]{1,3}[)]?[-\s\.])?[(]?[\d]{1,3}[)]?[-\s\.][\d\-\s\.]{5,9}[\d]{1}$/).withMessage('Invalid phone number'),
+    .trim().isString().matches(/^([\+]?[(]?[\d]{1,3}[)]?[-\s\.])?[(]?[\d]{1,3}[)]?[-\s\.][\d\-\s\.]{5,9}[\d]{1}$/).withMessage('Invalid phone number')
+    .escape(),
   body('dateOfBirth')
     .optional({ values: 'falsy' }) //Accept undefined, null & empty string
     .isString().withMessage('Date of Birth must be a string')
-    .trim().isISO8601().withMessage('Invalid date of birth'),
+    .trim().isISO8601().withMessage('Invalid date of birth')
+    .escape(),
   body('email')
     .notEmpty().withMessage('Email is required')
     .trim().isEmail().withMessage('Invalid email address')
@@ -59,7 +62,8 @@ export const validateFavorite = [
   body('id')
     .notEmpty().withMessage('Id is required')
     .isString().withMessage('Id must be a string')
-    .trim().isLength({ min: 1 }).withMessage('Id must be at least 1 characters long'),
+    .trim().isLength({ min: 1 }).withMessage('Id must be at least 1 characters long')
+    .escape(),
   body('employer')
     .notEmpty().withMessage('Employer is required')
     .isString().withMessage('Employer must be a string')
@@ -82,10 +86,12 @@ export const validateFavorite = [
     .trim().isLength({ min: 2 }).withMessage('Role must be at least 2 characters long'),
   body('posted')
     .optional({ values: 'falsy' }) //Accept undefined, null & empty string
-    .trim().isISO8601().withMessage('posted must be a Date'),
+    .trim().isISO8601().withMessage('posted must be a Date')
+    .escape(),
   body('expires')
     .optional({ values: 'falsy' }) //Accept undefined, null & empty string
-    .trim().isISO8601().withMessage('Expires must be a Date'),
+    .trim().isISO8601().withMessage('Expires must be a Date')
+    .escape(),
   body('contract')
     .notEmpty().withMessage('Contract is required')
     .isString().withMessage('Contract must be a string')
