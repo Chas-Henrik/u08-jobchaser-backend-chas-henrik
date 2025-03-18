@@ -51,7 +51,7 @@ The following routes & methods are supported:
 - /users (GET, PUT & DELETE method)
   
 **Favorites routes:**
-- /favorites (POST, GET method)
+- /favorites (POST, GET & DELETE method)
 - /favorites/:id (GET, PUT & DELETE method)
 
 The Users & Favorites resources are in a 'Many to Many' relationship, and 3 DB Tables (users, favorites & user_favorites) are used to support this relationship.

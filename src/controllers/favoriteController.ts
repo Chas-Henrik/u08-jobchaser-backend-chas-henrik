@@ -265,7 +265,81 @@ export async function updateFavorite(req: ProtectedRequest, res: Response) {
     }
 };
 
-// DELETE
+// DELETE MANY
+export async function deleteFavorites(req: ProtectedRequest, res: Response) {
+
+    try {
+        let usersFavoritesFound;
+        
+        // Check if req.user is defined
+        if(!req.user) {
+            res.status(500).json({message: "req.user is not defined"});
+            return;
+        }
+
+        // Check that user exists
+        const userFound = await prisma.users.findUnique({
+            where: {
+                id: req.user.id,
+            },
+        });
+
+        if(!userFound) {
+            res.status(401).json({message: "User not found"});
+            return;
+        }
+
+        // Check if favorites exists for the user
+        usersFavoritesFound = await prisma.users_favorites.findMany({
+            where: {
+                user_id: req.user.id,
+            },
+        });
+        
+        if(!usersFavoritesFound) {
+            res.status(404).json({message: "Favorites not found"});
+            return;
+        }
+
+        // Delete all favorites for the user
+        usersFavoritesFound.forEach(async usersFavorite => {
+            const user_id = usersFavorite.user_id;
+            const favorite_id = usersFavorite.favorite_id;
+
+            // Delete users_favorite entry
+            await prisma.users_favorites.deleteMany({
+                where: {
+                    user_id: user_id,
+                    favorite_id: favorite_id,
+                },
+            });
+
+            // Check if favorite is still in use by other users
+            const favoriteFound = await prisma.users_favorites.findFirst({
+                where: {
+                    favorite_id: favorite_id,
+                },
+            });
+
+            // Delete favorite if not in use by other users
+            if(!favoriteFound) {
+                // Delete favorite entry
+                await prisma.favorites.delete({
+                    where: {
+                        id: favorite_id,
+                    },
+                });
+            }
+        });
+
+        res.status(200).json({message: "Favorites deleted successfully"});
+    } catch(error) {
+        console.error(error);
+        res.status(500).json({message: `Internal server error\n\n${error}`});
+    }
+};
+
+// DELETE ONE
 export async function deleteFavorite(req: ProtectedRequest, res: Response) {
     const { id } = req.params;
 
