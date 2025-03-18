@@ -57,8 +57,8 @@ The following routes & methods are supported:
 The Users & Favorites resources are in a 'Many to Many' relationship, and 3 DB Tables (users, favorites & user_favorites) are used to support this relationship.
 
 A JWT token is used for authorization and is returned as a JWT Cookie after a successful Sign-In. 
-The JWT Cookie is automatically included in the Cookies header for all subsequent calls to the backend API, and the user is authorized for each route that require authorization. The JWT Cookie will expire after 15 mins forcing the user to sign-in again if he/she wishes to continue. 
-
+The JWT Cookie is automatically included in the Cookies header for all subsequent calls to the backend API to authorize the user for routes that require authorization. The JWT Cookie will expire after 15 mins forcing the user to sign-in again if he/she wishes to continue.
+  
 CORS is enabled with the following settings:
 - origin: ["http://localhost:3000", "http://localhost:3001"]
 - methods: ["POST", "GET", "PUT",  "DELETE"]
