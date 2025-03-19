@@ -1,14 +1,21 @@
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import express from "express";
-import cors from "cors";
+import cors, { CorsOptions } from "cors";
 
 const PORT = process.env.PORT || 3008;
 const app = express();
 
+const corsOptions: CorsOptions = {
+  origin: ["http://localhost:3000", "http://localhost:3001"],
+  methods: ["POST", "GET", "PUT", "DELETE"],
+  optionsSuccessStatus: 200,
+  credentials: true,
+};
+
 // Middleware
 app.use(cookieParser()); // !!!Ensure cookie-parser is used before authMiddleware is called!!!
-app.use(cors({ origin: ["http://localhost:3000", "http://localhost:3001"], methods: ["POST", "GET", "PUT",  "DELETE"], credentials: true }));
+app.use(cors(corsOptions));
 app.use(express.json());
 
 import signUpRoutes from "./routes/signUpRoutes";
