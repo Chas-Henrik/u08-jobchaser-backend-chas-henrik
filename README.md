@@ -54,7 +54,7 @@ The following routes & methods are supported:
 - /favorites (POST, GET & DELETE method)
 - /favorites/:id (GET, PUT & DELETE method)
 
-The Users & Favorites resources are in a 'Many to Many' relationship, and 3 DB Tables (users, favorites & user_favorites) are used to support this relationship.
+The Users & Favorites resources are in a 'Many to Many' relationship, and 3 DB Tables (users, favorites & users_favorites) have been created to support this relationship.
 
 A JWT token is used for authorization and is returned as a JWT Cookie after a successful Sign-In. 
 The JWT Cookie is automatically included in the Cookies header for all subsequent calls to the backend API to authorize the user for routes that require authorization. The JWT Cookie will expire after 15 mins forcing the user to sign-in again if he/she wishes to continue.
@@ -64,9 +64,9 @@ CORS is enabled with the following settings:
 - methods: ["POST", "GET", "PUT",  "DELETE"]
 - credentials: true
 
-*Also note that credentials must be enabled when using JWT Cookies.*
+*Note that credentials must be enabled when using JWT Cookies.*
   
-Both the Users & Favorites resource data are validated with Express Validator before accepted, and here follows an example of valid Users & Favorites resource data (that can be used for test purposes in Thunder Client):
+Both the Users & Favorites resource data are validated with Express Validator before accepted, and below is an example of valid Users & Favorites resource data (that can be used for test purposes in Thunder Client):
 
 **Users resource data**
 ```
@@ -108,17 +108,18 @@ The **DATABASE_URL** must be configured through the environment variable and has
 `mysql://root:root@localhost:3306/job-chaser-prisma` 
 during development.
   
-The site has not been deployed and currently only runs on the local machine.
+The site has not been deployed and currently only runs on the local machine and has only been tested with mySQL & MAMP.  
+And to deploy the site one also need to reconfigure CORS (as CORS currently only accept connections from PORT 3000 & 3001 on the local machine).
   
 ***
 *Known problems:*
   
-1. The Web Browser just deletes the JWT Cookie from its storage when it expires, so it is not possible to detect an expired JWT. Since the user eventually will end up with a `401 Unauthorized` response after the expired Cookie is deleted, all accesses resulting in a `401 Unauthorized` will be redirected to `/signin`. This seems reasonable as if the user is 'Unauthorized' he/she needs to login to continue (even if it wasn't an expired JWT Cookie that caused the problem).
+1. The Web Browser just deletes the JWT Cookie from its storage when it expires, so it is impossible to detect an expired JWT. The user eventually will end up with a `401 Unauthorized` response after the JWT expired, and therefore all accesses resulting in a `401 Unauthorized` is redirected to `/signin`. This seems reasonable as if the user is 'Unauthorized' he/she needs to login to continue (regardless of what caused the problem).
   
 *Notes:*
   
-1. As the favorite DB Table is shared among the users, all users will be affected if one user updates a favorite (with the PUT method).
-2. The primary key for the favorites table is recycled from the JobTechDev API (see [https://jobsearch.api.jobtechdev.se/](https://jobsearch.api.jobtechdev.se/)).
+1. Since the favorite DB Table is shared among the users, all users will become affected when a user updates a favorite (with the PUT method).
+2. The primary key for the favorites table is recycled from the JobTechDev API (see [https://jobsearch.api.jobtechdev.se/](https://jobsearch.api.jobtechdev.se/)) instead of creating a new key in the favorites table.
 3. `/users GET` gets the currently signed-in user (and not all users).
 
 ***
