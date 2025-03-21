@@ -1,13 +1,16 @@
 import express from "express"
-import { createUser, getUser, getUsers, updateUser, deleteUser } from "../controllers/userController";
+import { getUser, updateUser, deleteUser } from "../controllers/userController";
+import { authMiddleware } from "../middleware/authorize";
+import { notImplemented } from "../middleware/notImplemented";
+import { validateUser } from "../middleware/validators"
 
 const router = express.Router()
 
 // CRUD for users
-router.post("/", createUser);
-router.get("/", getUsers);
-router.get("/:id", getUser);
-router.put("/:id", updateUser);
-router.delete("/:id", deleteUser);
+router.post("/", notImplemented);
+router.get("/", authMiddleware, getUser);
+router.put("/", authMiddleware, validateUser, updateUser);
+router.delete("/", authMiddleware, deleteUser);
+router.patch("/", notImplemented);
 
 export default router;
