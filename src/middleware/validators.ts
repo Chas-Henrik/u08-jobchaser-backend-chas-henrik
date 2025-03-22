@@ -32,7 +32,7 @@ export const validateUser = [
   body('phone')
     .notEmpty().withMessage('Phone number is required')
     .isString().withMessage('Phone must be a string')
-    .trim().isString().matches(/^([\+]?[(]?[\d]{1,3}[)]?[-\s\.])?[(]?[\d]{1,3}[)]?[-\s\.][\d\-\s\.]{5,9}[\d]{1}$/).withMessage('Invalid phone number')
+    .trim().isString().matches(/^([\+][\s]?[(]?[\d]{1,3}[)]?[\-\s\.]*)?[(]?[\d]{1,3}[)]?[-\s\.]*[\d\-\s\.]{5,9}[\d]{1}$/).withMessage('Invalid phone number')
     .escape(),
   body('dateOfBirth')
     .optional({ values: 'falsy' }) //Accept undefined, null & empty string
